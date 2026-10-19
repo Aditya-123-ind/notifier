@@ -1,0 +1,21 @@
+{
+  "name": "edunotify-backend",
+  "version": "1.0.0",
+  "description": "Backend API Server for College Academic Notification Management Portal",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.11.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.0"
+  },
+  "author": "Google Antigravity SDK & Abhishek",
+  "license": "MIT"
+}

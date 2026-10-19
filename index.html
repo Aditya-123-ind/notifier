@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EduNotify - Academic Notification Portal</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="light-theme">
+  <!-- Urgent Announcement Banner / Real-time Alert Ticker -->
+  <div id="urgent-ticker-container" class="urgent-ticker-container hidden">
+    <div class="ticker-content">
+      <span class="ticker-badge">URGENT</span>
+      <span id="urgent-ticker-text" class="ticker-text">Welcome to the EduNotify Portal. Real-time circulars will appear here.</span>
+      <button id="close-ticker-btn" class="close-ticker-btn">&times;</button>
+    </div>
+  </div>
+
+  <div id="app-layout" class="app-layout hidden">
+    <!-- Sidebar Navigation -->
+    <aside id="app-sidebar" class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="logo-container">
+          <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+            <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"/>
+          </svg>
+          <span class="logo-text">EduNotify</span>
+        </div>
+        <button id="sidebar-close-btn" class="sidebar-toggle-btn mobile-only">&times;</button>
+      </div>
+      
+      <!-- User Profile Badge in Sidebar -->
+      <div class="sidebar-profile">
+        <div class="avatar" id="sidebar-avatar">U</div>
+        <div class="profile-info">
+          <h4 id="sidebar-username">User Name</h4>
+          <span id="sidebar-role" class="role-badge">Student</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <ul id="sidebar-menu">
+          <!-- Dynamic sidebar links based on role will be rendered here -->
+        </ul>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="theme-toggle-btn" class="theme-toggle-btn">
+          <svg class="theme-icon sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <span id="theme-toggle-text">Dark Mode</span>
+        </button>
+        <button id="logout-btn" class="logout-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Sign Out</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="app-main">
+      <header class="app-header">
+        <div class="header-left">
+          <button id="sidebar-open-btn" class="sidebar-toggle-btn mobile-only">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <h2 id="header-page-title">Dashboard</h2>
+        </div>
+        <div class="header-right">
+          <!-- Notification Bell Dropdown -->
+          <div class="header-bell-container" id="header-bell-container">
+            <button class="header-icon-btn" id="bell-btn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+              </svg>
+              <span id="bell-badge" class="bell-badge hidden">0</span>
+            </button>
+            <div class="bell-dropdown hidden" id="bell-dropdown">
+              <div class="dropdown-header">
+                <h3>Recent Alerts</h3>
+                <button id="bell-mark-all-read" class="text-btn">Mark all read</button>
+              </div>
+              <div class="dropdown-list" id="bell-dropdown-list">
+                <!-- Mock Alerts Rendered Dynamically -->
+              </div>
+            </div>
+          </div>
+          <!-- Profile Quick Info -->
+          <div class="header-profile-summary">
+            <span class="user-role-lbl" id="header-user-role-label">Student</span>
+            <div class="header-avatar" id="header-user-avatar">S</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Mounting View for Pages -->
+      <div id="page-content" class="page-content">
+        <!-- Main dashboards and dynamic content loaded here -->
+      </div>
+    </main>
+  </div>
+
+  <!-- Authentication Wrapper (Sign-in/Sign-up/Forgot password load here when logged out) -->
+  <div id="auth-container" class="auth-container">
+    <!-- Loaded dynamically by auth.js -->
+  </div>
+
+  <!-- Global Modals -->
+  <!-- 1. Notification Detail Modal -->
+  <div id="notification-detail-modal" class="modal-overlay hidden">
+    <div class="modal-container">
+      <div class="modal-header">
+        <div class="modal-title-group">
+          <span id="modal-notif-category" class="category-pill">Exams</span>
+          <span id="modal-notif-priority" class="priority-badge urgent">Urgent</span>
+          <h2 id="modal-notif-title">Semester Exams Timetable</h2>
+        </div>
+        <button class="modal-close-btn" id="close-detail-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="notif-metadata">
+          <div class="meta-item">
+            <span class="meta-label">Posted by:</span>
+            <span id="modal-notif-sender" class="meta-value">Dr. Sarah Jenkins (Principal)</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Date:</span>
+            <span id="modal-notif-date" class="meta-value">May 25, 2026, 10:30 AM</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-label">Target Audience:</span>
+            <span id="modal-notif-audience" class="meta-value">CSE - Semester 6</span>
+          </div>
+        </div>
+
+        <div id="modal-notif-description" class="modal-description rich-content">
+          <!-- Description rich HTML loaded here -->
+        </div>
+
+        <div id="modal-notif-attachment-section" class="attachment-section hidden">
+          <h4>Attachments</h4>
+          <div class="attachment-card">
+            <svg class="attachment-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <div class="attachment-details">
+              <span id="modal-notif-file-name" class="file-name">timetable.pdf</span>
+              <span id="modal-notif-file-size" class="file-size">1.2 MB</span>
+            </div>
+            <div class="attachment-buttons">
+              <button id="modal-notif-view-btn" class="btn btn-primary btn-sm">View</button>
+              <button id="modal-notif-download-btn" class="btn btn-outline btn-sm">Download</button>
+            </div>
+          </div>
+          <!-- File Preview Modal -->
+          <div id="file-preview-modal" class="modal-overlay hidden" style="z-index: 1001;">
+            <div class="modal-container" style="max-width: 90%; max-height: 90vh; overflow: auto;">
+              <div class="modal-header">
+                <h2 id="preview-file-name">File Preview</h2>
+                <button class="modal-close-btn" id="close-preview-modal">&times;</button>
+              </div>
+              <div class="modal-body" id="preview-content" style="padding: 20px;">
+                <!-- Preview content loaded here -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Feedback Section (Visible only to students) -->
+        <div id="modal-notif-feedback-section" class="feedback-section hidden">
+          <h3>Notification Feedback</h3>
+          <div id="feedback-list" class="feedback-list">
+            <!-- Feedbacks loaded here -->
+          </div>
+          <form id="feedback-form" class="feedback-form">
+            <input type="text" id="feedback-input" placeholder="Type your query or feedback..." required>
+            <button type="submit" class="btn btn-primary btn-sm" title="Send Message" style="display:flex; align-items:center; gap:6px;">
+              <span>Send</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width: 13px; height: 13px; transform: rotate(0deg);"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+          </form>
+        </div>
+      </div>
+      <div class="modal-footer" id="modal-detail-footer">
+        <button class="btn btn-outline" id="modal-export-pdf-btn">Export as PDF</button>
+        <button class="btn btn-primary" id="modal-close-btn-bottom">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Create/Edit Notification Modal -->
+  <div id="notification-form-modal" class="modal-overlay hidden">
+    <div class="modal-container modal-lg">
+      <div class="modal-header">
+        <h2 id="form-modal-title">Create Notification</h2>
+        <button class="modal-close-btn" id="close-form-modal">&times;</button>
+      </div>
+      <form id="notification-submit-form">
+        <input type="hidden" id="form-notif-id">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group col-span-2">
+              <label for="form-title" class="form-label">Title <span class="required">*</span></label>
+              <input type="text" id="form-title" class="form-input" placeholder="e.g. Schedule for Internal Assessment-I" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="form-category" class="form-label">Category <span class="required">*</span></label>
+              <select id="form-category" class="form-select" required>
+                <option value="academics">📚 Academics</option>
+                <option value="events">🎉 Events</option>
+                <option value="placement">💼 Placements</option>
+                <option value="achievements">🏆 Achievements</option>
+                <option value="circulars">📢 Circulars</option>
+                <option value="exams">Exams</option>
+                <option value="attendance">Attendance</option>
+                <option value="holidays">Holidays</option>
+                <option value="urgent">Urgent notices</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="form-priority" class="form-label">Priority Level <span class="required">*</span></label>
+              <select id="form-priority" class="form-select" required>
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+
+            <!-- Recipient Scope Fields (Adjusts dynamically per role in app.js) -->
+            <div class="form-group" id="group-recipient-scope">
+              <label for="form-recipient-group" class="form-label">Send To <span class="required">*</span></label>
+              <select id="form-recipient-group" class="form-select" required>
+                <!-- Filled dynamically by role:
+                     Principal: All Students, All Staff, Specific Branch, Individual Teacher
+                     Teacher: Branch Students, Specific Semester, Specific Class
+                -->
+              </select>
+            </div>
+
+            <div class="form-group hidden" id="group-target-branch">
+              <label for="form-target-branch" class="form-label">Target Branch <span class="required">*</span></label>
+              <select id="form-target-branch" class="form-select">
+                <!-- Loaded dynamically -->
+              </select>
+            </div>
+
+            <div class="form-group hidden" id="group-target-semester">
+              <label for="form-target-semester" class="form-label">Target Semester</label>
+              <select id="form-target-semester" class="form-select">
+                <option value="">All Semesters</option>
+                <option value="1">Semester 1</option>
+                <option value="2">Semester 2</option>
+                <option value="3">Semester 3</option>
+                <option value="4">Semester 4</option>
+                <option value="5">Semester 5</option>
+                <option value="6">Semester 6</option>
+                <option value="7">Semester 7</option>
+                <option value="8">Semester 8</option>
+              </select>
+            </div>
+
+            <div class="form-group hidden" id="group-target-teacher">
+              <label for="form-target-teacher" class="form-label">Target Teacher <span class="required">*</span></label>
+              <select id="form-target-teacher" class="form-select">
+                <!-- Loaded dynamically -->
+              </select>
+            </div>
+
+            <div class="form-group hidden" id="group-target-student">
+              <label class="form-label">Target Student <span class="required">*</span></label>
+              <select id="form-target-student" class="form-select">
+                <!-- Loaded dynamically -->
+              </select>
+            </div>
+
+            <!-- Group Student Picker (Principal only) -->
+            <div class="form-group col-span-2 hidden" id="group-target-student-group">
+              <label class="form-label">Select Group of Students <span class="required">*</span></label>
+              <div class="student-picker-container">
+                <div class="student-picker-search-row">
+                  <div class="search-input-wrapper" style="flex:1;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="student-group-search" class="form-input" placeholder="Search by name or USN / Roll No...">
+                  </div>
+                  <select id="student-group-branch-filter" class="form-select" style="width:180px;">
+                    <option value="">All Branches</option>
+                  </select>
+                </div>
+                <div id="student-group-list" class="student-group-list">
+                  <!-- Dynamically rendered checkboxes -->
+                </div>
+                <div id="student-group-selected-tags" class="student-group-tags">
+                  <!-- Selected student tags appear here -->
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+                  <span id="student-group-count" style="font-size:12px; color:var(--text-muted);">0 students selected</span>
+                  <button type="button" id="student-group-clear" class="text-btn" style="font-size:12px;">Clear All</button>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="form-group hidden" id="group-target-class">
+              <label for="form-target-class" class="form-label">Target Section/Class</label>
+              <input type="text" id="form-target-class" class="form-input" placeholder="e.g. CSE-A, CSE-B">
+            </div>
+
+            <!-- Schedule Field (Principal Only) -->
+            <div class="form-group col-span-2 hidden" id="group-schedule">
+              <div class="checkbox-container">
+                <input type="checkbox" id="form-schedule-check">
+                <label for="form-schedule-check">Schedule this announcement for later</label>
+              </div>
+              <input type="datetime-local" id="form-schedule-time" class="form-input mt-2 hidden">
+            </div>
+
+            <!-- Pin Field (Principal Only) -->
+            <div class="form-group col-span-2 hidden" id="group-pin">
+              <div class="checkbox-container">
+                <input type="checkbox" id="form-pin-check">
+                <label for="form-pin-check">Pin this notification to the top feed</label>
+              </div>
+            </div>
+
+            <!-- Description (Rich Text Editor Simulator) -->
+            <div class="form-group col-span-2">
+              <label class="form-label">Announcement Content <span class="required">*</span></label>
+              <div class="rich-editor-container">
+                <div class="rich-editor-toolbar">
+                  <button type="button" class="toolbar-btn" data-cmd="bold" title="Bold"><b>B</b></button>
+                  <button type="button" class="toolbar-btn" data-cmd="italic" title="Italic"><i>I</i></button>
+                  <button type="button" class="toolbar-btn" data-cmd="underline" title="Underline"><u>U</u></button>
+                  <button type="button" class="toolbar-btn" data-cmd="insertUnorderedList" title="Bullet List">&bull; List</button>
+                  <button type="button" class="toolbar-btn" data-cmd="insertOrderedList" title="Numbered List">1. List</button>
+                  <button type="button" class="toolbar-btn" data-cmd="h3" title="Heading">H3</button>
+                  <button type="button" class="toolbar-btn" data-cmd="createLink" title="Link">Link</button>
+                  <button type="button" class="toolbar-btn text-danger" id="editor-clear" title="Clear All">Clear</button>
+                </div>
+                <div id="form-description-editor" class="rich-editor-content" contenteditable="true" placeholder="Compose your notification here..."></div>
+              </div>
+            </div>
+
+            <!-- File Upload Input -->
+            <div class="form-group col-span-2">
+              <label for="form-attachment" class="form-label">Attachment (PDF or Image)</label>
+              <div class="file-upload-wrapper">
+                <input type="file" id="form-attachment" class="file-upload-input" accept=".pdf,image/*">
+                <div class="file-upload-placeholder">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                  </svg>
+                  <span>Drag & drop or <span class="text-primary font-semibold">browse</span></span>
+                  <span class="file-limits">PDF, PNG, JPG up to 5MB</span>
+                </div>
+                <div id="file-upload-selected" class="file-upload-selected hidden">
+                  <span id="selected-file-name">document.pdf</span>
+                  <button type="button" id="remove-file-btn" class="remove-file-btn">&times;</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="cancel-form-btn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="save-form-btn">Publish Notification</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts: Loaded sequentially to maintain compatibility without local modules server -->
+  <script src="js/db.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
