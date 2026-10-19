@@ -1,34 +1,44 @@
 const express = require("express");
+const path = require("path");
 const cors = require("cors");
 const apiRoutes = require("./routes/api");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Enable CORS requests for portal frontend clients
 app.use(cors());
-
-// Configure JSON payload body parsing
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// Register REST API endpoints
 app.use("/api", apiRoutes);
 
-// Default base routing
-app.get("/", (req, res) => {
+const publicDir = __dirname;
+app.use(express.static(publicDir));
+
+app.get("/health", (req, res) => {
   res.status(200).json({
-    name: "EduNotify Academic Notifications Server",
-    version: "1.0.0",
-    status: "online",
-    documentation: "/api-docs"
+    status: "ok",
+    service: "edunotify",
+    port: PORT
   });
 });
 
-// Port listener
+app.get("/", (req, res) => {
+  res.sendFile(path.join(publicDir, "index.html"));
+});
+
+// In case a client hits a non-API route that isn't a file, serve the app shell.
+app.get("*", (req, res) => {
+  if (req.path.startsWith("/api")) {
+    return res.status(404).json({ error: "API route not found" });
+  }
+  res.sendFile(path.join(publicDir, "index.html"));
+});
+
 app.listen(PORT, () => {
-  console.log(`=================================================`);
+  console.log("=================================================");
   console.log(`EduNotify Server listening on port ${PORT}...`);
-  console.log(`Access local API endpoints: http://localhost:${PORT}/api`);
-  console.log(`=================================================`);
+  console.log(`Access local app: http://localhost:${PORT}/`);
+  console.log(`API endpoints: http://localhost:${PORT}/api`);
+  console.log("=================================================");
 });
